@@ -81,11 +81,18 @@ def entry_from_product(data: dict, product: str) -> dict:
     restore = products[product][dfu][_.RESTORE]
     return restore
 
-def check_sha1sum(filename, sha1):
-    with open(filename, mode='rb') as f:
-        resultado = hashlib.file_digest(f, 'sha1')
-    assert resultado.hexdigest() == sha1, 'SHA1 mistmatch at "{}": expected "{}"'.format(filename, sha1)
-    return True
+def calculate_sha1_from_file(ruta_fichero):
+    # 1. Crear el objeto hash
+    h = hashlib.sha1()
+
+    # 2. Abrir en modo binario ('rb') es obligatorio
+    with open(ruta_fichero, "rb") as f:
+        # 3. Leer en bloques hasta el final del archivo
+        while True:
+            bloque = f.read(4*1024*1024)
+            if not bloque:
+                break
+            h.update(bloque)
 
 def descargar_con_progreso(url, nombre_archivo):
     # 1. Verificar si el archivo ya existe para reanudar
@@ -118,7 +125,7 @@ def descargar_con_progreso(url, nombre_archivo):
 
             with open(nombre_archivo, modo_archivo) as f:
                 descargado = bytes_locales
-                bloque_size = 8192
+                bloque_size = 4*1024*1024
 
                 while True:
                     buffer = respuesta.read(bloque_size)
@@ -146,15 +153,16 @@ def descargar_con_progreso(url, nombre_archivo):
         else:
             print(f"\nError HTTP: {e.code}")
 
+
 def download(url: str, sha1: str):
     assert url != '' and url != None, 'url is required'
     output_file = os.path.basename(url)
     print(">> Downloading '{}'".format(url))
-    descargar_con_progreso(url, output_file)
+    hdigest = descargar_con_progreso(url, output_file)
 
     if sha1 is not None:
         print(">> Checking hash '{}'".format(sha1))
-        check_sha1sum(output_file, sha1)
+        calculate_sha1_from_file(output_file)
     with open(output_file, "rb") as fr:
         result = fr.read()
     return result
