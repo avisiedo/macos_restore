@@ -23,8 +23,8 @@ On **Windows**: (require python installed)
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -U pip
-pip install -r requirements.txt
+python3 -m pip install -U pip
+python3 -m pip install -r requirements.txt
 python3 -m macos_restore "MacBookPro18,2"
 ```
 
