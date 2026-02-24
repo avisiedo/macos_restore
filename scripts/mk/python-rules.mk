@@ -6,8 +6,8 @@ all: format lint doc test
 
 .PHONY: deps
 deps: .venv  ## Install dependencies in a python virtual environment
-	source .venv/bin/activate; pip install -U pip
-	source .venv/bin/activate; pip install poetry
+	source .venv/bin/activate; python3 -m pip install -U pip
+	source .venv/bin/activate; python3 -m pip install poetry
 	source .venv/bin/activate; python3 -m poetry install
 
 .venv:
@@ -15,12 +15,12 @@ deps: .venv  ## Install dependencies in a python virtual environment
 
 .PHONY: format
 format: .venv   ## Apply format rules to the python code
-	source .venv/bin/activate; black "${MODULE}"
-	source .venv/bin/activate; black test
+	source .venv/bin/activate; python3 -m black "${MODULE}"
+	source .venv/bin/activate; python3 -m black test
 
 .PHONY: lint
 lint: .venv  ## Run linter on the python code
-	source .venv/bin/activate; pylint "${MODULE}"
+	source .venv/bin/activate; python3 -m pylint "${MODULE}"
 
 .PHONY: run
 run: .venv  ## Execute hello_world
@@ -39,10 +39,10 @@ test-unit: .venv  ## Run Unit Tests
 .PHONY: test-cov
 test-cov: .venv  ## Get coverage report
 	source .venv/bin/activate; python3 -m \
-	  pytest --cov=${MODULE}
+	  python3 -m pytest --cov=${MODULE}
 
 .PHONY: doc
 doc: .venv  ## Generate documentation from the source code
 	# TODO Update your module name
-	source .venv/bin/activate; pdoc3 --force -o docs/ "${MODULE}"
+	source .venv/bin/activate; python3 -m pdoc3 --force -o docs/ "${MODULE}"
 
