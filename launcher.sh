@@ -17,7 +17,10 @@ check_python3() {
 }
 
 clone_repo() {
-    [ -e .git ] || git clone 'https://github.com/little-engineer-2025/macos_restore.git'
+    [ -e .git ] || {
+        git clone 'https://github.com/little-engineer-2025/macos_restore.git'
+        cd macos_restore
+    }
 }
 
 main() {
@@ -28,11 +31,9 @@ main() {
         python3 -m venv .venv
     }
     source .venv/bin/activate
-    pip install -U pip
-    pip install -r requirements.txt
+    python3 -m pip install -U pip
+    python3 -m pip install -r requirements.txt
     exec python3 ./macos_restore/__main__.py "$@"
 }
 
-if [ "${BASH_SOURCE[0]}" == "$0" ]; then
-    main "$@"
-fi
+main "$@"
