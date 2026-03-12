@@ -4,14 +4,18 @@ PRODUCT="$1"
 check_product() {
     local product="$1"
     [ "${product}" != "" ] || {
-        printf "error:product is empty\n"
-        exit 1
+        printf "error: product is empty\n"
+        while [ "$product" == "" ]; do
+            printf "Type in the product (for instance: MacBookPro18,2): "
+            read product
+        done
+        PRODUCT="${product}"
     }
 }
 
 check_python3() {
     which "python3" &>/dev/null || {
-        printf "error:python3 is not found in the environment\n"
+        printf "error: python3 is not found in the environment\n"
         exit 1
     }
 }
@@ -33,7 +37,7 @@ main() {
     source .venv/bin/activate
     python3 -m pip install -U pip
     python3 -m pip install -r requirements.txt
-    exec python3 ./macos_restore/__main__.py "$@"
+    exec python3 ./macos_restore/__main__.py "${PRODUCT}"
 }
 
 main "$@"
