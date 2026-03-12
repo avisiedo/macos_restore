@@ -13,7 +13,7 @@ Cheers!
 ## Getting started
 
 On **Linux** you can do:
-`curl -L "https://github.com/little-engineer-2025/macos_restore/raw/refs/heads/main/launcher.sh" | /bin/bash - `
+`git clone "https://github.com/avisiedo/macos_restore.git" && cd macos_restore && /bin/bash launcher.sh"`
 
 On **Windows**: (require python installed)
 
